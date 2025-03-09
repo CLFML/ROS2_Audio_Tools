@@ -1,0 +1,6 @@
+{
+    "name": "audio_tools",
+    "cmake-args":[
+        "-G Ninja"
+    ]
+}
