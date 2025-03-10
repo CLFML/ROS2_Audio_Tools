@@ -22,14 +22,14 @@ jobs:
 
       - name: Install prerequired packages
         # To compile and run the code we require cmake, ninja and opencv
-        run: sudo apt-get update && sudo apt-get install build-essential cmake ninja-build 
+        run: sudo apt-get update && sudo apt-get install build-essential cmake ninja-build ros-jazzy-diagnostic-updater
 
       - name: Install dependencies
         working-directory: ${{ github.workspace }}
         run: |
           sudo rosdep init || true
           rosdep update
-          rosdep install --from-paths src -y --ignore-src
+          rosdep install --from-paths . -y --ignore-src
 
       - name: Colcon build
         working-directory: ${{ github.workspace }}
