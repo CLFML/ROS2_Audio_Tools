@@ -27,10 +27,8 @@ AudioCaptureNode::AudioCaptureNode()
   this->get_parameter("sample_format", _sample_format);
 
   this->declare_parameter<int>("channels", 1);
-  this->declare_parameter<int>("depth", 16);
   this->declare_parameter<int>("sample_rate", 16000);
   this->get_parameter("channels", _channels);
-  this->get_parameter("depth", _depth);
   this->get_parameter("sample_rate", _sample_rate);
 
   if (_channels < 1 || _channels > 8) {

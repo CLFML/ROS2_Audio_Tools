@@ -92,7 +92,7 @@ private:
    * @brief Audio parameters: bitrate, channels, depth, sample rate, and device
    * index.
    */
-  int _bitrate, _channels, _depth, _sample_rate, _device;
+  int _bitrate, _channels, _sample_rate, _device;
 
   /**
    * @brief Number of bytes processed.

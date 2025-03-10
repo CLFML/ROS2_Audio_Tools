@@ -1,0 +1,24 @@
+name: Build Debian Packages (ROS2 Jazzy)
+on:
+  workflow_dispatch:
+  release:
+    types: [created]
+jobs:
+  build-debian-packages:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Install required packages
+        run: sudo apt-get update && sudo apt-get install libsdl2-dev -y
+      - name: Checkout this repository
+        uses: actions/checkout@v2.3.4
+      - name: Build Debian packages
+        uses: ichiro-its/ros2-build-debian-action@main
+        with:
+          ros2-distro: jazzy
+      - name: Upload Release Asset
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run:
+          gh release upload $(gh release view --repo CLFML/ROS2_Audio_Tools --json tagName --jq ".tagName") package/*.deb
