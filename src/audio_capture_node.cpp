@@ -61,8 +61,7 @@ AudioCaptureNode::AudioCaptureNode()
                                                                   info_qos);
 
   _pub_stamped = this->create_publisher<audio_tools::msg::AudioDataStamped>(
-    "audio_stamped", 10);
-
+      "audio_stamped", 10);
 
   _timer_info = rclcpp::create_timer(this, get_clock(), std::chrono::seconds(5),
                                      [this] { publishInfo(); });
