@@ -21,8 +21,6 @@
 
 #include <SDL.h>
 #include <SDL_audio.h>
-#include <diagnostic_updater/diagnostic_updater.hpp>
-#include <diagnostic_updater/publisher.hpp>
 #include <rclcpp/rclcpp.hpp>
 
 #include "audio_tools/msg/audio_data.hpp"
@@ -126,16 +124,9 @@ private:
   SDL_AudioDeviceID _dev_id_in = 0;
 
   /**
-   * @brief ROS diagnostic updater for monitoring audio capture.
-   */
-  diagnostic_updater::Updater updater_;
-
-  /**
    * @brief ROS publisher for timestamped audio data with diagnostics.
    */
-  std::shared_ptr<diagnostic_updater::DiagnosedPublisher<
-      audio_tools::msg::AudioDataStamped>>
-      _diagnosed_pub_stamped;
+  rclcpp::Publisher<audio_tools::msg::AudioDataStamped>::SharedPtr _pub_stamped;
 
   /**
    * @brief Configures the SDL2 audio capture stream.

@@ -1,0 +1,94 @@
+name: ROS2 Jazzy with Pixi on Windows
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Install Pixi
+        shell: pwsh
+        run: |
+          irm https://pixi.sh/install.ps1 | iex
+          echo "$env:USERPROFILE\.pixi\bin" | Out-File -FilePath $env:GITHUB_PATH -Append
+          $env:PATH += ";$env:USERPROFILE\.pixi\bin"
+          pixi --version
+      
+
+      - name: Create Pixi Environment and Replace `pixi.toml`
+        shell: cmd
+        run: |
+          pixi init robostack
+          cd robostack
+          if exist pixi.toml del pixi.toml
+          (
+          echo [project]
+          echo name = "robostack"
+          echo version = "0.1.0"
+          echo description = "Development environment for RoboStack ROS packages"
+          echo authors = ["Your Name <your.email@example.com>"]
+          echo channels = ["https://fast.prefix.dev/conda-forge"]
+          echo platforms = ["linux-64", "win-64", "osx-64", "osx-arm64", "linux-aarch64"]
+          echo.
+          echo [target.win-64.dependencies]
+          echo # vs2022_win-64 = "*"  ^# Uncomment if using Visual Studio 2022
+          echo.
+          echo [dependencies]
+          echo python = "*"
+          echo compilers = "*"
+          echo cmake = "*"
+          echo pkg-config = "*"
+          echo make = "*"
+          echo ninja = "*"
+          echo.
+          echo [target.linux.dependencies]
+          echo libgl-devel = "*"
+          echo.
+          echo [environments]
+          echo noetic = { features = ["noetic"] }
+          echo humble = { features = ["humble"] }
+          echo jazzy = { features = ["jazzy"] }
+          echo.
+          echo # noetic
+          echo [feature.noetic]
+          echo channels = ["https://prefix.dev/robostack-noetic"]
+          echo.
+          echo [feature.noetic.dependencies]
+          echo ros-noetic-desktop = "*"
+          echo catkin_tools = "*"
+          echo rosdep = "*"
+          echo.
+          echo # humble
+          echo [feature.humble]
+          echo channels = ["https://prefix.dev/robostack-humble"]
+          echo.
+          echo [feature.humble.dependencies]
+          echo ros-humble-desktop = "*"
+          echo colcon-common-extensions = "*"
+          echo rosdep = "*"
+          echo.
+          echo # jazzy
+          echo [feature.jazzy]
+          echo channels = ["https://prefix.dev/robostack-jazzy"]
+          echo.
+          echo [feature.jazzy.dependencies]
+          echo ros-jazzy-desktop = "*"
+          echo colcon-common-extensions = "*"
+          echo rosdep = "*"
+          ) > pixi.toml
+          pixi install
+          pixi shell -e jazzy
+          cd ..
+
+      - name: Run colcon build (Release Mode)
+        shell: cmd
+        run: |
+          cd robostack
+          pixi run -e jazzy "cd .. && colcon build --packages-select audio_tools --cmake-args -DCMAKE_BUILD_TYPE=Release"

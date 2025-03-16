@@ -7,7 +7,6 @@ find_package(builtin_interfaces REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
-find_package(diagnostic_updater REQUIRED)
 find_package(sdl2_vendor REQUIRED)
 find_package(SDL2 REQUIRED)
 
@@ -29,7 +28,6 @@ ament_target_dependencies(audio_capture_node
     rclcpp
     std_msgs
     std_srvs
-    diagnostic_updater
     sdl2_vendor
 )
 

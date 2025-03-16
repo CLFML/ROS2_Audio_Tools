@@ -15,7 +15,6 @@
   <depend>rclcpp</depend>
   <depend>std_msgs</depend>
   <depend>std_srvs</depend>
-  <depend>diagnostic_updater</depend>
   <depend>sdl2_vendor</depend>
 
   <test_depend>ament_lint_auto</test_depend>
