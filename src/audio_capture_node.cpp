@@ -20,7 +20,7 @@
 #include <stdio.h>
 
 AudioCaptureNode::AudioCaptureNode()
-    : Node("audio_capture_node"), _desired_rate(-1.0), updater_(this) {
+    : Node("audio_capture_node"), _desired_rate(-1.0) {
 
   // Declare and get parameters
   this->declare_parameter<std::string>("sample_format", "S16LE");
@@ -60,21 +60,9 @@ AudioCaptureNode::AudioCaptureNode()
   _pub_info = this->create_publisher<audio_tools::msg::AudioInfo>("audio_info",
                                                                   info_qos);
 
-  auto pub_stamped = this->create_publisher<audio_tools::msg::AudioDataStamped>(
-      "audio_stamped", 10);
+  _pub_stamped = this->create_publisher<audio_tools::msg::AudioDataStamped>(
+    "audio_stamped", 10);
 
-  // Diagnostics
-  this->declare_parameter<double>("diagnostic_tolerance", 0.1);
-  auto tolerance = this->get_parameter("diagnostic_tolerance").as_double();
-
-  updater_.setHardwareID("microphone");
-  _diagnosed_pub_stamped =
-      std::make_shared<diagnostic_updater::DiagnosedPublisher<
-          audio_tools::msg::AudioDataStamped>>(
-          pub_stamped, updater_,
-          diagnostic_updater::FrequencyStatusParam(
-              &_desired_rate, &_desired_rate, tolerance, 10),
-          diagnostic_updater::TimeStampStatusParam());
 
   _timer_info = rclcpp::create_timer(this, get_clock(), std::chrono::seconds(5),
                                      [this] { publishInfo(); });
@@ -107,7 +95,7 @@ void AudioCaptureNode::callback(uint8_t *stream, int len) {
 
   // Publish messages
   _pub->publish(msg);
-  _diagnosed_pub_stamped->publish(stamped_msg);
+  _pub_stamped->publish(stamped_msg);
 }
 
 void AudioCaptureNode::publishInfo() {
