@@ -14,22 +14,19 @@ cmd = "ros2 run audio_tools audio_capture_node"
 depends-on=["build"]
 
 [dependencies]
-python = ">=3.10"
+python = ">=3.11"
 compilers = ">=1.9.0,<2"
 pkg-config = ">=0.29.2,<0.30"
 ninja = ">=1.12.1,<2"
-ros-jazzy-desktop = "*"
+ros-jazzy-desktop-base = "*"
 colcon-common-extensions = "*"
 rosdep = "*"
 
-[feature.py310.dependencies]
-python = "3.10.*"
 [feature.py311.dependencies]
 python = "3.11.*"
 [feature.py312.dependencies]
 python = "3.12.*"
 
 [environments]
-py310 = ["py310"]
 py311 = ["py311"]
 py312 = ["py312"]
