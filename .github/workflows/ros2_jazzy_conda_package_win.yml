@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - dev
   pull_request:
 
 jobs:
@@ -15,22 +14,36 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Miniconda
-        uses: conda-incubator/setup-miniconda@v2
-        with:
-          python-version: 3.12
-          auto-activate-base: false
-          activate-environment: build-env
-          environment-file: environment.yml  # Optional: use your actual env file if needed
-          miniforge-variant: Mambaforge
-          miniforge-version: latest
+      - name: Install Pixi
+        uses: prefix-dev/setup-pixi@v0.8.3
 
-      - name: Build Conda Package
-        uses: cascode-labs/build-conda-action/action.yml@v0
-        with:
-          recipe_path: ./conda  # Update this path to your actual recipe location
-          base_env_prefix: C:\Miniconda\envs\build-env  # Update if different
-          package_artifact_name: ros2-audio-tools-package
-          test_results_artifact_name: ros2-audio-tools-test-results
-          build_options: "-c https://prefix.dev/robostack-jazzy -c conda-forge"
-          conda_build_env_filepath: conda/conda_build_config.yaml  # Adjust if needed
+      - name: Build conda package with Pixi
+        shell: cmd
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          :: Get release version from GitHub, strip leading 'v'
+          FOR /F "delims=" %%A IN ('gh release view --json tagName --jq ".tagName"') DO (
+            SET "RELEASE_VERSION=%%A"
+          )
+          SET "RELEASE_VERSION=%RELEASE_VERSION:v=%"
+
+          :: Create isolated build workspace
+          mkdir "%TEMP%\ros-audio-build\src"
+
+          :: Copy files except .pixi, pixi.toml, .git
+          robocopy . "%TEMP%\ros-audio-build\src" /E /XD .pixi .git /XF pixi.toml
+
+          :: Copy conda recipe
+          robocopy conda "%TEMP%\ros-audio-build\conda" /E
+
+          :: Set SRC_PATH
+          SET "SRC_PATH=%TEMP%\ros-audio-build\src"
+
+          :: Add build dependencies
+          pixi add conda-build conda-verify
+
+          :: Run the build
+          pixi run conda build . ^
+            -c https://prefix.dev/robostack-jazzy ^
+            -c conda-forge
