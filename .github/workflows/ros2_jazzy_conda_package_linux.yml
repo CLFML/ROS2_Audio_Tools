@@ -21,13 +21,10 @@ jobs:
           mkdir -p /tmp/ros-audio-build/src
 
           # Copy everything except .pixi and pixi.toml
-          rsync -av --exclude='.pixi' --exclude='pixi.toml' ./ /tmp/ros-audio-build/src/
+          rsync -av --exclude='.pixi' --exclude='pixi.toml' ./ /tmp/ros-audio-build/src/ /.git
 
           # Copy conda recipe separately
           cp -r conda /tmp/ros-audio-build/
-
-          # Change to recipe dir
-          cd /tmp/ros-audio-build/conda
 
           # Set the path for conda to find the real source
           export SRC_PATH=/tmp/ros-audio-build/src
