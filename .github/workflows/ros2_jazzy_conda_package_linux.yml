@@ -36,14 +36,23 @@ jobs:
           # source:
           #   path: {{ environ.get("SRC_PATH") }}
 
-          pixi run conda install -y conda-build conda-verify
-
           for PY_VER in 3.10 3.11 3.12; do
+            echo "Building for Python $PY_VER..."
+
+            # Create a temporary Pixi environment for this Python version
+            pixi init --yes --name py${PY_VER//./} --python $PY_VER
+            cd /tmp/ros-audio-build
+
+            # Add conda-build & verify to the environment
+            pixi add conda-build conda-verify
+
+            # Run the build
             pixi run conda build . \
-            --variants "{'python': ['$PY_VER']}" \
-            -c https://prefix.dev/robostack-jazzy \
-            -c conda-forge
-            done
+              --variants "{'python': ['$PY_VER']}" \
+              -c https://prefix.dev/robostack-jazzy \
+              -c conda-forge
+
+          done
            
       - name: Upload Release Asset
         env:

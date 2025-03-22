@@ -30,8 +30,6 @@ requirements:
     - ros-jazzy-std-msgs
     - ros-jazzy-builtin-interfaces
     - ros-jazzy-ament-index-cpp
-    - ros-jazzy-fastcdr
-    - ros-jazzy-fastrtps
     - ros-jazzy-tracetools
     - ros-jazzy-fastcdr
     - ros-jazzy-rosidl-typesupport-cpp
@@ -62,8 +60,6 @@ requirements:
     - ros-jazzy-std-msgs
     - ros-jazzy-builtin-interfaces
     - ros-jazzy-ament-index-cpp
-    - ros-jazzy-fastcdr
-    - ros-jazzy-fastrtps
     - ros-jazzy-tracetools
     - ros-jazzy-fastcdr
     - ros-jazzy-rosidl-typesupport-cpp
