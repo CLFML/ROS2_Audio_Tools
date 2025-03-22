@@ -40,7 +40,7 @@ jobs:
             echo "Building for Python $PY_VER..."
 
             # Create a temporary Pixi environment for this Python version
-            pixi init --yes --name py${PY_VER//./} --python $PY_VER
+            pixi init --name py${PY_VER//./} --python $PY_VER
             cd /tmp/ros-audio-build
 
             # Add conda-build & verify to the environment
