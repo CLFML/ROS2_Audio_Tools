@@ -17,6 +17,7 @@ jobs:
 
       - name: Build conda package with Pixi
         run: |
+          export RELEASE_VERSION="$(gh release view --json tagName --jq .tagName | sed 's/^v//')"
           # Create isolated build workspace
           mkdir -p /tmp/ros-audio-build/src
 
@@ -43,4 +44,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release upload $(gh release view --repo CLFML/ROS2_Audio_Tools --json tagName --jq ".tagName") ~/miniforge3/conda-bld/linux-64/*.conda
+          gh release upload $(gh release view --repo CLFML/ROS2_Audio_Tools --json tagName --jq ".tagName")  /home/runner/work/ROS2_Audio_Tools/ROS2_Audio_Tools/.pixi/envs/default/conda-bld/linux-64/*.conda
