@@ -21,9 +21,3 @@ ninja = ">=1.12.1,<2"
 ros-jazzy-desktop = "*"
 colcon-common-extensions = "*"
 rosdep = "*"
-
-[feature.py312.dependencies]
-python = "3.12.*"
-
-[environments]
-py312 = ["py312"]

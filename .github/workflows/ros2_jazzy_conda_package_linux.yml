@@ -8,17 +8,13 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        environment: [py312]
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Install Pixi
         uses: prefix-dev/setup-pixi@v0.8.3
-        with:
-          environments: ${{ matrix.environment }}
+
       - name: Build conda package with Pixi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -36,13 +32,11 @@ jobs:
           # Set the path for conda to find the real source
           export SRC_PATH=/tmp/ros-audio-build/src
 
-          echo "Building for Python 3.12"
-          
           # Add conda-build & verify to the environment
           pixi add conda-build conda-verify
 
           # Run the build
-          pixi run -e py312 conda build . \
+          pixi run conda build . \
               -c https://prefix.dev/robostack-jazzy \
               -c conda-forge
            
