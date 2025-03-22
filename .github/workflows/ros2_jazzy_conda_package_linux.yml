@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        environment: [py311, py312]
+        environment: [py312]
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -35,16 +35,6 @@ jobs:
 
           # Set the path for conda to find the real source
           export SRC_PATH=/tmp/ros-audio-build/src
-
-          echo "Building for Python 3.11"
-          
-          # Add conda-build & verify to the environment
-          pixi add conda-build conda-verify
-
-          # Run the build
-          pixi run -e py311 conda build . \
-              -c https://prefix.dev/robostack-jazzy \
-              -c conda-forge
 
           echo "Building for Python 3.12"
           

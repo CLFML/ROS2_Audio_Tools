@@ -14,28 +14,7 @@ build:
 requirements:
   build:
     - python
-    - ros-jazzy-rclcpp
-    - ros-jazzy-rcl
-    - ros-jazzy-rcl-interfaces
-    - ros-jazzy-rmw
-    - ros-jazzy-rcutils
-    - ros-jazzy-rosidl-cmake
-    - ros-jazzy-rosidl-default-runtime
-    - ros-jazzy-rosidl-default-generators
-    - ros-jazzy-rosidl-dynamic-typesupport
-    - ros-jazzy-rosidl-generator-c
-    - ros-jazzy-rosidl-runtime-c
-    - ros-jazzy-rosidl-typesupport-fastrtps-c
-    - ros-jazzy-rosidl-typesupport-introspection-cpp
-    - ros-jazzy-std-msgs
-    - ros-jazzy-builtin-interfaces
-    - ros-jazzy-ament-index-cpp
-    - ros-jazzy-tracetools
-    - ros-jazzy-fastcdr
-    - ros-jazzy-rosidl-typesupport-cpp
-    - ros-jazzy-rosidl-typesupport-c
-    - ros-jazzy-fastrtps
-    - ros-jazzy-rcl-interfaces
+    - ros-jazzy-desktop
     - sdl2 >=2.26,<3.0  # instead of just sdl2
     - libgcc-ng
     - libstdcxx-ng
@@ -44,28 +23,7 @@ requirements:
 
   run:
     - python
-    - ros-jazzy-rclcpp
-    - ros-jazzy-rcl
-    - ros-jazzy-rcl-interfaces
-    - ros-jazzy-rmw
-    - ros-jazzy-rcutils
-    - ros-jazzy-rosidl-cmake
-    - ros-jazzy-rosidl-default-runtime
-    - ros-jazzy-rosidl-default-generators
-    - ros-jazzy-rosidl-dynamic-typesupport
-    - ros-jazzy-rosidl-generator-c
-    - ros-jazzy-rosidl-runtime-c
-    - ros-jazzy-rosidl-typesupport-fastrtps-c
-    - ros-jazzy-rosidl-typesupport-introspection-cpp
-    - ros-jazzy-std-msgs
-    - ros-jazzy-builtin-interfaces
-    - ros-jazzy-ament-index-cpp
-    - ros-jazzy-tracetools
-    - ros-jazzy-fastcdr
-    - ros-jazzy-rosidl-typesupport-cpp
-    - ros-jazzy-rosidl-typesupport-c
-    - ros-jazzy-fastrtps
-    - ros-jazzy-rcl-interfaces
+    - ros-jazzy-desktop
     - sdl2 >=2.26,<3.0  # instead of just sdl2
     - libgcc-ng
     - libstdcxx-ng
