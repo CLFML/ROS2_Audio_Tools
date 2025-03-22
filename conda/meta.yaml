@@ -43,7 +43,6 @@ requirements:
     - libstdcxx-ng
     - libcxx  # macOS compatibility (optional)
     - libffi
-    - openssl  # if needed by deps
 
   run:
     - python
