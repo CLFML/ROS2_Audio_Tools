@@ -10,7 +10,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        shell: bash -l {0}  # forces login shell to load conda/etc properly
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
