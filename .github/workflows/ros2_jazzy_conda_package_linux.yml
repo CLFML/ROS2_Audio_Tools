@@ -11,18 +11,39 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
       - name: Install Pixi
         uses: prefix-dev/setup-pixi@v0.5.1
-      - name: Run colcon build (Release Mode)
+
+      - name: Build conda package with Pixi
         run: |
-          mkdir -p /tmp/build_src
-          cp -r . /tmp/build_src/ROS2_Audio_Tools
-          # Run conda build from within the temp copy
-          cd /tmp/build_src/ROS2_Audio_Tools/conda
-          pixi run conda install conda-build conda-verify
-          pixi run conda build . --no-copy-source -c https://prefix.dev/robostack-jazzy -c conda-forge
+          # Create isolated build workspace
+          mkdir -p /tmp/ros-audio-build/src
+
+          # Copy everything except .pixi and pixi.toml
+          rsync -av --exclude='.pixi' --exclude='pixi.toml' ./ /tmp/ros-audio-build/src/
+
+          # Copy conda recipe separately
+          cp -r conda /tmp/ros-audio-build/
+
+          # Change to recipe dir
+          cd /tmp/ros-audio-build/conda
+
+          # Set the path for conda to find the real source
+          export SRC_PATH=/tmp/ros-audio-build/src
+
+          # meta.yaml should use this:
+          # source:
+          #   path: {{ environ.get("SRC_PATH") }}
+
+          pixi run conda install -y conda-build conda-verify
+
+          pixi run conda build . \
+            -c https://prefix.dev/robostack-jazzy \
+            -c conda-forge
+
       - name: Upload Release Asset
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run:
+        run: |
           gh release upload $(gh release view --repo CLFML/ROS2_Audio_Tools --json tagName --jq ".tagName") ~/miniforge3/conda-bld/linux-64/*.conda

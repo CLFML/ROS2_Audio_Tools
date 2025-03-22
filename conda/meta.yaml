@@ -6,7 +6,7 @@ package:
   version: {{ version }}
 
 source:
-  path: ../  # project root (where .pixi lives)
+  path: {{ environ.get("SRC_PATH") }}
 
 build:
   number: 1
