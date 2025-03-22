@@ -14,20 +14,36 @@ build:
 requirements:
   build:
     - ros-jazzy-desktop
-    - sdl2 >=2.26,<3.0  # instead of just sdl2
+    - sdl2 >=2.26,<3.0
+
+    {% if target_platform != "win-64" %}
     - libgcc-ng
     - libstdcxx-ng
-    - libcxx  # macOS compatibility (optional)
+    {% endif %}
+
+    # Optional: only include on macOS
+    {% if target_platform == "osx-64" or target_platform == "osx-arm64" %}
+    - libcxx
+    {% endif %}
+
     - libffi
 
   run:
     - ros-jazzy-desktop
-    - sdl2 >=2.26,<3.0  # instead of just sdl2
+    - sdl2 >=2.26,<3.0
+
+    {% if target_platform != "win-64" %}
     - libgcc-ng
     - libstdcxx-ng
-    - libcxx  # macOS compatibility (optional)
+    {% endif %}
+
+    {% if target_platform == "osx-64" or target_platform == "osx-arm64" %}
+    - libcxx
+    {% endif %}
+
     - libffi
-    - openssl  # if needed by deps
+    - openssl
+
 
 about:
   summary: "ROS 2 audio capture/processing tools"
