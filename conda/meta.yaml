@@ -14,7 +14,7 @@ build:
 requirements:
   build:
     - python
-    - ros-jazzy-desktop
+    - ros-jazzy-desktop = "*"
     - sdl2 >=2.26,<3.0  # instead of just sdl2
     - libgcc-ng
     - libstdcxx-ng
@@ -23,7 +23,7 @@ requirements:
 
   run:
     - python
-    - ros-jazzy-desktop
+    - ros-jazzy-desktop = "*"
     - sdl2 >=2.26,<3.0  # instead of just sdl2
     - libgcc-ng
     - libstdcxx-ng
