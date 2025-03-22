@@ -39,9 +39,10 @@ jobs:
           pixi run conda install -y conda-build conda-verify
 
           pixi run conda build . \
-            -c https://prefix.dev/robostack-jazzy \
-            -c conda-forge
-
+           --variants "{'python': ['3.10', '3.11', '3.12']}" \
+           -c https://prefix.dev/robostack-jazzy \
+           -c conda-forge
+           
       - name: Upload Release Asset
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
