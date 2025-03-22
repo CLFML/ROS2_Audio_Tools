@@ -10,17 +10,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash -l {0}  # forces login shell to load conda/etc properly
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
       - name: Install Pixi
-        run: |
-          curl -fsSL https://pixi.sh/install.sh | bash
-      
-
+        uses: prefix-dev/setup-pixi@v0.5.1
       - name: Install Pixi environment
         run: |
           pixi install
