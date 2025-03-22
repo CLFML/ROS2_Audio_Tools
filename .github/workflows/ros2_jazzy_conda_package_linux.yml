@@ -20,7 +20,7 @@ jobs:
           # Run conda build from within the temp copy
           cd /tmp/build_src/ROS2_Audio_Tools/conda
           pixi run conda install conda-build conda-verify
-          pixi run "conda build . -c https://prefix.dev/robostack-jazzy -c conda-forge"
+          pixi run conda build . --no-copy-source -c https://prefix.dev/robostack-jazzy -c conda-forge
       - name: Upload Release Asset
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
