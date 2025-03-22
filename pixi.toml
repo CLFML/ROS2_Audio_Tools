@@ -14,7 +14,7 @@ cmd = "ros2 run audio_tools audio_capture_node"
 depends-on=["build"]
 
 [dependencies]
-python = ">=3.11"
+python = ">=3.10"
 compilers = ">=1.9.0,<2"
 pkg-config = ">=0.29.2,<0.30"
 ninja = ">=1.12.1,<2"
@@ -30,6 +30,6 @@ python = "3.11.*"
 python = "3.12.*"
 
 [environments]
-py311 = ["py310"]
+py310 = ["py310"]
 py311 = ["py311"]
 py312 = ["py312"]
