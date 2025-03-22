@@ -38,3 +38,7 @@ log/
 
 # IDE folders
 .vscode/
+
+# Pixi artifacts
+pixi.lock
+.pixi/

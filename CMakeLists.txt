@@ -6,8 +6,6 @@ find_package(rclcpp REQUIRED)
 find_package(builtin_interfaces REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 find_package(std_msgs REQUIRED)
-find_package(std_srvs REQUIRED)
-find_package(sdl2_vendor REQUIRED)
 find_package(SDL2 REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
@@ -27,8 +25,6 @@ add_compile_options(audio_capture_node -Wall)
 ament_target_dependencies(audio_capture_node
     rclcpp
     std_msgs
-    std_srvs
-    sdl2_vendor
 )
 
 target_link_libraries(audio_capture_node "${cpp_typesupport_target}" ${SDL2_LIBRARIES}) 

@@ -1,82 +1,52 @@
 {% set name = "audio_tools" %}
-{% set version = "0.1.0" %}
+{% set version = environ.get("RELEASE_VERSION") or "0.0.0" %}
 
 package:
   name: {{ name }}
   version: {{ version }}
 
 source:
-  path: ../  # project root (where .pixi lives)
+  path: {{ environ.get("SRC_PATH") }}
 
 build:
   number: 1
+  script_env:
+    - CMAKE_BUILD_TYPE=Release
+    - CMAKE_CONFIG_TYPE=Release
 
 requirements:
   build:
-    - python
-    - ros-jazzy-rclcpp
-    - ros-jazzy-rcl
-    - ros-jazzy-rcl-interfaces
-    - ros-jazzy-rmw
-    - ros-jazzy-rcutils
-    - ros-jazzy-rosidl-cmake
-    - ros-jazzy-rosidl-default-runtime
-    - ros-jazzy-rosidl-default-generators
-    - ros-jazzy-rosidl-dynamic-typesupport
-    - ros-jazzy-rosidl-generator-c
-    - ros-jazzy-rosidl-runtime-c
-    - ros-jazzy-rosidl-typesupport-fastrtps-c
-    - ros-jazzy-rosidl-typesupport-introspection-cpp
-    - ros-jazzy-std-msgs
-    - ros-jazzy-builtin-interfaces
-    - ros-jazzy-ament-index-cpp
-    - ros-jazzy-fastcdr
-    - ros-jazzy-fastrtps
-    - ros-jazzy-tracetools
-    - ros-jazzy-fastcdr
-    - ros-jazzy-rosidl-typesupport-cpp
-    - ros-jazzy-rosidl-typesupport-c
-    - ros-jazzy-fastrtps
-    - ros-jazzy-rcl-interfaces
-    - sdl2 >=2.26,<3.0  # instead of just sdl2
+    - ros-jazzy-desktop
+    - sdl2 >=2.26,<3.0
+
+    {% if target_platform != "win-64" %}
     - libgcc-ng
     - libstdcxx-ng
-    - libcxx  # macOS compatibility (optional)
+    {% endif %}
+
+    # Optional: only include on macOS
+    {% if target_platform == "osx-64" or target_platform == "osx-arm64" %}
+    - libcxx
+    {% endif %}
+
     - libffi
-    - openssl  # if needed by deps
 
   run:
-    - python
-    - ros-jazzy-rclcpp
-    - ros-jazzy-rcl
-    - ros-jazzy-rcl-interfaces
-    - ros-jazzy-rmw
-    - ros-jazzy-rcutils
-    - ros-jazzy-rosidl-cmake
-    - ros-jazzy-rosidl-default-runtime
-    - ros-jazzy-rosidl-default-generators
-    - ros-jazzy-rosidl-dynamic-typesupport
-    - ros-jazzy-rosidl-generator-c
-    - ros-jazzy-rosidl-runtime-c
-    - ros-jazzy-rosidl-typesupport-fastrtps-c
-    - ros-jazzy-rosidl-typesupport-introspection-cpp
-    - ros-jazzy-std-msgs
-    - ros-jazzy-builtin-interfaces
-    - ros-jazzy-ament-index-cpp
-    - ros-jazzy-fastcdr
-    - ros-jazzy-fastrtps
-    - ros-jazzy-tracetools
-    - ros-jazzy-fastcdr
-    - ros-jazzy-rosidl-typesupport-cpp
-    - ros-jazzy-rosidl-typesupport-c
-    - ros-jazzy-fastrtps
-    - ros-jazzy-rcl-interfaces
-    - sdl2  # For audio support (libSDL2)
+    - ros-jazzy-desktop
+    - sdl2 >=2.26,<3.0
+
+    {% if target_platform != "win-64" %}
     - libgcc-ng
     - libstdcxx-ng
-    - libcxx  # macOS compatibility (optional)
+    {% endif %}
+
+    {% if target_platform == "osx-64" or target_platform == "osx-arm64" %}
+    - libcxx
+    {% endif %}
+
     - libffi
-    - openssl  # if needed by deps
+    - openssl
+
 
 about:
   summary: "ROS 2 audio capture/processing tools"

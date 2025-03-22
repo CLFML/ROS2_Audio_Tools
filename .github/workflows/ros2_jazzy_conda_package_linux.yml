@@ -1,29 +1,46 @@
 name: Create ROS2 Jazzy package on Linux
 
 on:
-  push:
-    branches:
-      - main
-      - dev
-  pull_request:
-
+  workflow_dispatch:
+  release:
+    types: [created]
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
       - name: Install Pixi
-        run: |
-          curl -fsSL https://pixi.sh/install.sh | bash
-      
+        uses: prefix-dev/setup-pixi@v0.8.3
 
-      - name: Install Pixi environment
+      - name: Build conda package with Pixi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          pixi install
+          export RELEASE_VERSION="$(gh release view --json tagName --jq .tagName | sed 's/^v//')"
+          # Create isolated build workspace
+          mkdir -p /tmp/ros-audio-build/src
 
-      - name: Run colcon build (Release Mode)
+          # Copy everything except .pixi and pixi.toml
+          rsync -av --exclude='.pixi' --exclude='pixi.toml' ./ /tmp/ros-audio-build/src/ --exclude='.git'
+
+          # Copy conda recipe separately
+          cp -r conda /tmp/ros-audio-build/
+
+          # Set the path for conda to find the real source
+          export SRC_PATH=/tmp/ros-audio-build/src
+
+          # Add conda-build & verify to the environment
+          pixi add conda-build conda-verify
+
+          # Run the build
+          pixi run conda build . \
+              -c https://prefix.dev/robostack-jazzy \
+              -c conda-forge
+           
+      - name: Upload Release Asset
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cd robostack
-          pixi run build
+          gh release upload $(gh release view --repo CLFML/ROS2_Audio_Tools --json tagName --jq ".tagName")  /home/runner/work/ROS2_Audio_Tools/ROS2_Audio_Tools/.pixi/envs/default/conda-bld/linux-64/*.conda
