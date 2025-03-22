@@ -18,7 +18,7 @@ python = ">=3.11"
 compilers = ">=1.9.0,<2"
 pkg-config = ">=0.29.2,<0.30"
 ninja = ">=1.12.1,<2"
-ros-jazzy-desktop-base = "*"
+ros-jazzy-desktop = "*"
 colcon-common-extensions = "*"
 rosdep = "*"
 
