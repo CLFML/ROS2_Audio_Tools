@@ -7,7 +7,7 @@ preview = ["pixi-build"]
 
 [tasks]
 build = "colcon build --packages-select audio_tools --cmake-args -DCMAKE_BUILD_TYPE=Release"
-package_conda = "colcon build --install-base=$CONDA_PREFIX"
+package_conda = "cd conda && conda build . -c https://prefix.dev/robostack-jazzy -c conda-forge"
 
 [tasks.start]
 cmd = "ros2 run audio_tools audio_capture_node"
@@ -17,4 +17,6 @@ depends-on=["build"]
 compilers = ">=1.9.0,<2"
 pkg-config = ">=0.29.2,<0.30"
 ninja = ">=1.12.1,<2"
-ros-jazzy-desktop = ">=0.11.0,<0.12"
+ros-jazzy-desktop = "*"
+colcon-common-extensions = "*"
+rosdep = "*"
