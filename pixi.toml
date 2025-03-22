@@ -1,0 +1,20 @@
+[project]
+authors = ["Hoog-V <hogeweyv@gmail.com>"]
+name = "ros-audio_tools"
+channels = ["https://fast.prefix.dev/conda-forge", "https://prefix.dev/robostack-jazzy"]
+platforms = ["linux-64", "win-64", "osx-64", "osx-arm64", "linux-aarch64"]
+preview = ["pixi-build"]
+
+[tasks]
+build = "colcon build --packages-select audio_tools --cmake-args -DCMAKE_BUILD_TYPE=Release"
+package_conda = "colcon build --install-base=$CONDA_PREFIX"
+
+[tasks.start]
+cmd = "ros2 run audio_tools audio_capture_node"
+depends-on=["build"]
+
+[dependencies]
+compilers = ">=1.9.0,<2"
+pkg-config = ">=0.29.2,<0.30"
+ninja = ">=1.12.1,<2"
+ros-jazzy-desktop = ">=0.11.0,<0.12"

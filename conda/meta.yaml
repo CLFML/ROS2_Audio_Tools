@@ -1,0 +1,22 @@
+{% set name = "audio_tools" %}
+{% set version = "0.1.0" %}
+
+package:
+  name: {{ name }}
+  version: {{ version }}
+
+source:
+  path: ../  # project root (where .pixi lives)
+
+build:
+  script: bash build.sh
+  noarch: false
+
+requirements:
+  run:
+    - python  # You can include basic runtime deps if needed (e.g. numpy)
+
+about:
+  summary: "ROS 2 audio capture/processing tools"
+  license: "MIT"
+  home: "https://github.com/your-org/audio_tools"
