@@ -38,10 +38,12 @@ jobs:
 
           pixi run conda install -y conda-build conda-verify
 
-          pixi run conda build . \
-           --variants "{'python': ['3.10', '3.11', '3.12']}" \
-           -c https://prefix.dev/robostack-jazzy \
-           -c conda-forge
+          for PY_VER in 3.10 3.11 3.12; do
+            pixi run conda build . \
+            --variants "{'python': ['$PY_VER']}" \
+            -c https://prefix.dev/robostack-jazzy \
+            -c conda-forge
+            done
            
       - name: Upload Release Asset
         env:
