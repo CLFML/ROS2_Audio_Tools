@@ -11,53 +11,45 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          path: C:\cw
+      - name: Move src to root (everything except .pixi, .git, pixi.toml, conda)
+        shell: cmd
+        working-directory: C:\cw
+        run: |
+          robocopy C:\cw\src C:\src /E /XD .pixi .git conda /XF pixi.toml
+      - name: Change release version to environment variable
+        shell: pwsh
+        working-directory: C:\cw
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $release = (gh release view --json tagName --jq ".tagName")
+          $version = $release -replace "^v", ""
+          $env:RELEASE_VERSION = $version
 
+          robocopy "conda/win" "." /E
+          Remove-Item -Recurse -Force "conda"
+
+         (Get-Content "recipe/recipe.yaml") -replace 'VER{0.0.0}', $env:RELEASE_VERSION | Set-Content "recipe/recipe.yaml"
       - name: Install Pixi
+        working-directory: C:\cw
         uses: prefix-dev/setup-pixi@v0.8.3
 
       - name: Build conda package with Pixi
+        working-directory: C:\cw
         shell: cmd
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          :: Get release version from GitHub, strip leading 'v'
-          FOR /F "delims=" %%A IN ('gh release view --json tagName --jq ".tagName"') DO (
-            SET "RELEASE_VERSION=%%A"
-          )
-          SET "RELEASE_VERSION=%RELEASE_VERSION:v=%"
-
-          :: Create isolated build workspace
-          mkdir "C:\build\src"
-
-          :: Copy files except .pixi, pixi.toml, .git
-          robocopy . "C:\build\src" /E /XD .pixi .git /XF pixi.toml
-
-          :: Copy conda recipe
-          robocopy conda "C:\build\conda" /E
-
-          :: Set SRC_PATH
-          SET "SRC_PATH=C:\build\src"
-
-          :: Add build dependencies
-          pixi add conda-build conda-verify
-
-          :: Run the build
-          pixi run conda build . -c https://prefix.dev/robostack-jazzy -c conda-forge --croot C:\build
+          pixi run boa build .
 
       - name: Upload Windows Conda Package to GitHub Release
+        working-directory: C:\cw
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        shell: bash
+        shell: pwsh
         run: |
-          # Get the release tag name
-          TAG_NAME=$(gh release view --repo CLFML/ROS2_Audio_Tools --json tagName --jq ".tagName")
-
-          # Locate the .conda file
-          PACKAGE_PATH=$(ls C:/build/win-64/*.conda | head -n 1)
-
-          # Copy and rename with `-win` suffix in filename
-          WIN_PACKAGE_PATH="${PACKAGE_PATH%.conda}-win.conda"
-          cp "$PACKAGE_PATH" "$WIN_PACKAGE_PATH"
-
-          # Upload the renamed file
-          gh release upload "$TAG_NAME" "$WIN_PACKAGE_PATH" --repo CLFML/ROS2_Audio_Tools --clobber
+         $tag = gh release view --repo CLFML/ROS2_Audio_Tools --json tagName --jq ".tagName"
+         $pkg = Get-ChildItem "C:/cw/.pixi/envs/default/conda-bld/win-64/*.tar.bz2" | Select-Object -First 1
+         $renamed = $pkg.FullName -replace '\.conda$', '-win.conda'
+         Copy-Item $pkg.FullName $renamed
+         gh release upload $tag $renamed --repo CLFML/ROS2_Audio_Tools --clobber

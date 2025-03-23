@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
+package:
+  name: ros2-audio-tools
+  version: "0.1.0"
+
+source:
+  - path: '/home/victor/Documents/ROS2_Audio_Tools'
+
+build:
+  number: 4
+about:
+  homepage: https://www.ros.org/
+  license: BSD-3-Clause
+  summary: |
+    Robot Operating System
+
+extra:
+  recipe-maintainers:
+    - ros-forge
+
+outputs:
+  - package:
+      name: ros-jazzy-audio-tools
+      version: 3.11.5
+    about:
+      homepage: https://www.ros.org/
+      license: BSD-3-Clause
+      summary: "Audio tools for ROS2 containing:\n  - Audio capture node; Which able to capture audio from your microphone"
+      maintainers: []
+    extra:
+      recipe-maintainers:
+        - robostack
+    build:
+      number: 0
+      script: '$RECIPE_DIR/build_ament_cmake.sh'
+    requirements:
+      build:
+        - libgcc-ng
+        - libstdcxx-ng
+        - ninja
+        - python
+        - patch
+        - make
+        - coreutils
+        - cmake
+      host:
+        - ros-jazzy-ament-cmake
+        - ros-jazzy-rosidl-default-generators
+        - ros-jazzy-rclcpp
+        - ros-jazzy-std-msgs
+        - ros-jazzy-sdl2-vendor
+        - ros-jazzy-rclcpp
+        - ros-jazzy-std-msgs
+        - ros-jazzy-sdl2-vendor
+        - ros-jazzy-ament-lint-auto
+        - ros-jazzy-ament-lint-common
+      run:
+        - ros-jazzy-rclcpp
+        - ros-jazzy-std-msgs
+        - ros-jazzy-sdl2-vendor
+        - ros-jazzy-rosidl-default-runtime
+        - ros-jazzy-rclcpp
+        - ros-jazzy-std-msgs
+        - ros-jazzy-sdl2-vendor
+
