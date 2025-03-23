@@ -19,7 +19,7 @@ jobs:
       - name: Copy recipe to home/recipe
         run: |
           mkdir ~/recipe
-          cp conda/lin ~/recipe
+          cp -r conda/lin ~/recipe
 
       - name: Inject release version into recipe.yaml
         env:
