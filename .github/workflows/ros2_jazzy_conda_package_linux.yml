@@ -10,37 +10,47 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+      
+      - name: Prepare home/src directory
+        run: |
+          mkdir ~/src
+          rsync -av --exclude='.git' --exclude='.github' --exclude='conda' ./ /home/runner/src/
 
-      - name: Install Pixi
-        uses: prefix-dev/setup-pixi@v0.8.3
+      - name: Copy recipe to home/recipe
+        run: |
+          mkdir ~/recipe
+          cp conda/lin ~/recipe
 
-      - name: Build conda package with Pixi
+      - name: Inject release version into recipe.yaml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           export RELEASE_VERSION="$(gh release view --json tagName --jq .tagName | sed 's/^v//')"
-          # Create isolated build workspace
-          mkdir -p /tmp/ros-audio-build/src
+          
+          cd ~/recipe
+          sed -i "s/VER{0.0.0}/$RELEASE_VERSION/g" recipe/recipe.yaml
 
-          # Copy everything except .pixi and pixi.toml
-          rsync -av --exclude='.pixi' --exclude='pixi.toml' ./ /tmp/ros-audio-build/src/ --exclude='.git'
-
-          # Copy conda recipe separately
-          cp -r conda /tmp/ros-audio-build/
-
-          # Set the path for conda to find the real source
-          export SRC_PATH=/tmp/ros-audio-build/src
-
-          # Add conda-build & verify to the environment
-          pixi add conda-build conda-verify
-
-          # Run the build
-          pixi run conda build . \
-              -c https://prefix.dev/robostack-jazzy \
-              -c conda-forge
+      - name: Install Pixi
+        uses: prefix-dev/setup-pixi@v0.8.3
+        with:
+         run-install: false
+      
+      - name: Install Pixi environment
+        working-directory: /home/runner/recipe
+        run: |
+           pixi install
+ 
+      - name: Build package with Pixi
+        working-directory: /home/runner/recipe
+        shell: pixi run bash -e {0}
+        run: |
+          conda config --add channels https://prefix.dev/robostack-jazzy
+          conda config --add channels conda-forge
+          conda config --set channel_priority strict
+          boa build .
            
       - name: Upload Release Asset
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release upload $(gh release view --repo CLFML/ROS2_Audio_Tools --json tagName --jq ".tagName")  /home/runner/work/ROS2_Audio_Tools/ROS2_Audio_Tools/.pixi/envs/default/conda-bld/linux-64/*.conda
+          gh release upload $(gh release view --repo CLFML/ROS2_Audio_Tools --json tagName --jq ".tagName")  /home/runner/recipe/.pixi/envs/default/conda-bld/linux-64/ros-jazzy-*.tar.bz2

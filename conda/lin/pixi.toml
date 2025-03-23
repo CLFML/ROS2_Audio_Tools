@@ -1,0 +1,14 @@
+[project]
+authors = ["Hoog-V <hogeweyv@gmail.com>"]
+name = "ros-audio_tools"
+channels = ["https://fast.prefix.dev/conda-forge", "https://prefix.dev/robostack-jazzy"]
+platforms = ["linux-64"]
+
+[dependencies]
+compilers = ">=1.9.0,<2"
+pkg-config = ">=0.29.2,<0.30"
+ninja = ">=1.12.1,<2"
+ros-jazzy-desktop = "*"
+colcon-common-extensions = "*"
+rosdep = "*"
+boa = "*"
