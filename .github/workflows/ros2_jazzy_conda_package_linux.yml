@@ -47,6 +47,7 @@ jobs:
           conda config --add channels https://prefix.dev/robostack-jazzy
           conda config --add channels conda-forge
           conda config --set channel_priority strict
+          chmod +x recipe/*.sh
           boa build .
            
       - name: Upload Release Asset
