@@ -40,13 +40,20 @@ jobs:
         with:
          run-install: false
 
-      - name: Build Conda Package with Pixi
+      - name: Install Pixi environment
         working-directory: C:\cw
         shell: cmd
         run: |
           pixi install
-          pixi run boa build .
-
+          
+      - name: Build package with Pixi
+        working-directory: C:\cw
+        shell: pixi run bash -e {0}
+        run: |
+          conda config --add channels https://prefix.dev/robostack-jazzy
+          conda config --add channels https://fast.prefix.dev/conda-forge
+          boa build .
+        
       - name: Upload Windows Conda Package to GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
