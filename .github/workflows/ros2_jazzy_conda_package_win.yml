@@ -17,12 +17,12 @@ jobs:
         shell: cmd
         run: |
           if not exist C:\src mkdir C:\src
-          robocopy . C:\src /E /XD .git .github conda /XF pixi.toml
+          robocopy . C:\src /E /XD .git .github conda /XF pixi.toml || exit 0
 
       - name: Copy recipe to C:\cw
         shell: cmd
         run: |
-          robocopy conda\win C:\cw /E
+          robocopy conda\win C:\cw /E || exit 0
 
       - name: Inject release version into recipe.yaml
         shell: pwsh
