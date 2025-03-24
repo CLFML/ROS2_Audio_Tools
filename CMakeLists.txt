@@ -20,8 +20,6 @@ rosidl_get_typesupport_target(cpp_typesupport_target ${PROJECT_NAME} "rosidl_typ
 
 add_executable(audio_capture_node src/audio_capture_node.cpp)
 
-add_compile_options(audio_capture_node -Wall)
-
 ament_target_dependencies(audio_capture_node
     rclcpp
     std_msgs
@@ -29,6 +27,10 @@ ament_target_dependencies(audio_capture_node
 
 target_link_libraries(audio_capture_node "${cpp_typesupport_target}" ${SDL2_LIBRARIES}) 
 target_include_directories(audio_capture_node PUBLIC ${SDL2_INCLUDE_DIRS})
+
+if(UNIX AND NOT APPLE)  # Linux only
+  target_compile_options(audio_capture_node PRIVATE -Wall)
+endif()
 
 install(TARGETS
 audio_capture_node
@@ -38,7 +40,10 @@ DESTINATION lib/${PROJECT_NAME})
 add_executable(audio_playback_node src/audio_playback_node.cpp)
 target_link_libraries(audio_playback_node "${cpp_typesupport_target}" ${SDL2_LIBRARIES}) 
 target_include_directories(audio_playback_node PUBLIC ${SDL2_INCLUDE_DIRS})
-add_compile_options(audio_playback_node -Wall)
+
+if(UNIX AND NOT APPLE)
+  target_compile_options(audio_playback_node PRIVATE -Wall)
+endif()
 
 ament_target_dependencies(audio_playback_node
     rclcpp
