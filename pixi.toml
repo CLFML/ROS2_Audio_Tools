@@ -7,7 +7,9 @@ preview = ["pixi-build"]
 
 [tasks]
 build = "colcon build --packages-select audio_tools --cmake-args -DCMAKE_BUILD_TYPE=Release"
-package_conda = "conda install conda-build conda-verify && cd conda && conda build . -c https://prefix.dev/robostack-jazzy -c conda-forge"
+
+[target.linux-64.tasks]
+vscode = 'env -u LD_LIBRARY_PATH code .'
 
 [tasks.start]
 cmd = "ros2 run audio_tools audio_capture_node"
@@ -22,3 +24,9 @@ colcon-common-extensions = "*"
 rosdep = "*"
 conda-build = ">=25.1.2,<26"
 conda-verify = ">=3.4.2,<4"
+
+[target.linux-64.dependencies]
+python-devtools = "*"         # Optional but useful
+python = "*"            # This is critical for CMake to find Python
+pybind11 = "*"                # Optional, if you work with bindings
+numpy = "*"
