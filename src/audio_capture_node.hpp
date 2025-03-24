@@ -81,10 +81,15 @@ private:
   rclcpp::TimerBase::SharedPtr _timer_info;
 
   /**
+   * @brief Audio information metadata
+   */
+  audio_tools::msg::AudioInfo _info_msg;
+
+  /**
    * @brief SDL audio specifications for requested and obtained formats.
    */
-  SDL_AudioSpec capture_spec_requested;
-  SDL_AudioSpec capture_spec_obtained;
+  SDL_AudioSpec _capture_spec_requested;
+  SDL_AudioSpec _capture_spec_obtained;
 
   /**
    * @brief Audio parameters: bitrate, channels, depth, sample rate, and device
@@ -146,7 +151,7 @@ private:
    * byte sizes.
    */
   const std::unordered_map<std::string, std::pair<SDL_AudioFormat, int>>
-      format_map = {
+      _format_map = {
           {"U8", {AUDIO_U8, 1}}, ///< Unsigned 8-bit (1 byte)
           {"S8", {AUDIO_S8, 1}}, ///< Signed 8-bit (1 byte)
           {"U16LE",
