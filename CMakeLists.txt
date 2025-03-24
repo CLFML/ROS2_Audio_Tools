@@ -34,4 +34,19 @@ install(TARGETS
 audio_capture_node
 DESTINATION lib/${PROJECT_NAME}) 
 
+
+add_executable(audio_playback_node src/audio_playback_node.cpp)
+target_link_libraries(audio_playback_node "${cpp_typesupport_target}" ${SDL2_LIBRARIES}) 
+target_include_directories(audio_playback_node PUBLIC ${SDL2_INCLUDE_DIRS})
+add_compile_options(audio_playback_node -Wall)
+
+ament_target_dependencies(audio_playback_node
+    rclcpp
+    std_msgs
+)
+
+
+install(TARGETS
+audio_playback_node
+DESTINATION lib/${PROJECT_NAME}) 
 ament_package()
