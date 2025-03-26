@@ -1,8 +1,8 @@
 /**
- * @file audio_capture_node.cpp
+ * @file audio_playback_node.cpp
  * @brief Audio Capture Node for ROS 2 using SDL2
  *
- * Copyright 2024 <Hoog-V / CLFML>
+ * Copyright 2025 <Hoog-V / CLFML>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
