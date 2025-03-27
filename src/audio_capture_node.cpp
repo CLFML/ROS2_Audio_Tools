@@ -2,7 +2,7 @@
  * @file audio_capture_node.cpp
  * @brief Audio Capture Node for ROS 2 using SDL2
  *
- * Copyright 2024 <Hoog-V / CLFML>
+ * Copyright 2025 <Hoog-V / CLFML>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -91,19 +91,18 @@ void AudioCaptureNode::callback(uint8_t *stream, int len) {
   msg.data.assign(stream, stream + len);
 
   stamped_msg.audio = msg;
-
+  stamped_msg.info = _info_msg;
   // Publish messages
   _pub->publish(msg);
   _pub_stamped->publish(stamped_msg);
 }
 
 void AudioCaptureNode::publishInfo() {
-  audio_tools::msg::AudioInfo info_msg;
-  info_msg.channels = _channels;
-  info_msg.sample_rate = _sample_rate;
-  info_msg.sample_format = _sample_format;
+  _info_msg.channels = _channels;
+  _info_msg.sample_rate = _sample_rate;
+  _info_msg.sample_format = _sample_format;
 
-  _pub_info->publish(info_msg);
+  _pub_info->publish(_info_msg);
 }
 
 AudioCaptureNode::~AudioCaptureNode() {
@@ -133,40 +132,41 @@ bool AudioCaptureNode::ConfigureSDLStream(int device, const std::string &format,
                 SDL_GetAudioDeviceName(i, SDL_TRUE));
   }
 
-  SDL_zero(capture_spec_requested);
-  SDL_zero(capture_spec_obtained);
+  SDL_zero(_capture_spec_requested);
+  SDL_zero(_capture_spec_obtained);
 
-  auto format_it = format_map.find(format);
-  if (format_it == format_map.end()) {
+  auto format_it = _format_map.find(format);
+  if (format_it == _format_map.end()) {
     RCLCPP_ERROR(this->get_logger(), "Unknown audio format: %s",
                  format.c_str());
     return false;
   }
   _nbytes = format_it->second.second;
 
-  capture_spec_requested.freq = _sample_rate;
-  capture_spec_requested.format = format_it->second.first;
-  capture_spec_requested.channels = channels;
-  capture_spec_requested.samples = chunk_size;
-  capture_spec_requested.callback = [](void *userdata, uint8_t *stream,
-                                       int len) {
+  _capture_spec_requested.freq = _sample_rate;
+  _capture_spec_requested.format = format_it->second.first;
+  _capture_spec_requested.channels = channels;
+  _capture_spec_requested.samples = chunk_size;
+  _capture_spec_requested.callback = [](void *userdata, uint8_t *stream,
+                                        int len) {
     static_cast<AudioCaptureNode *>(userdata)->callback(stream, len);
   };
-  capture_spec_requested.userdata = this;
+  _capture_spec_requested.userdata = this;
 
   if (device >= 0 && device < nDevices) {
     RCLCPP_INFO(this->get_logger(),
                 "%s: Attempting to open capture device #%d: '%s'...\n",
                 __func__, device, SDL_GetAudioDeviceName(device, SDL_TRUE));
 
-    _dev_id_in =
-        SDL_OpenAudioDevice(SDL_GetAudioDeviceName(device, SDL_TRUE), SDL_TRUE,
-                            &capture_spec_requested, &capture_spec_obtained, 0);
+    _dev_id_in = SDL_OpenAudioDevice(SDL_GetAudioDeviceName(device, SDL_TRUE),
+                                     SDL_TRUE, &_capture_spec_requested,
+                                     &_capture_spec_obtained, 0);
   } else {
     RCLCPP_INFO(this->get_logger(),
                 "%s: Attempting to open default capture device...\n", __func__);
-    _dev_id_in = SDL_OpenAudioDevice(nullptr, SDL_TRUE, &capture_spec_requested,
-                                     &capture_spec_obtained, 0);
+    _dev_id_in =
+        SDL_OpenAudioDevice(nullptr, SDL_TRUE, &_capture_spec_requested,
+                            &_capture_spec_obtained, 0);
   }
 
   if (!_dev_id_in) {
@@ -178,15 +178,16 @@ bool AudioCaptureNode::ConfigureSDLStream(int device, const std::string &format,
   RCLCPP_INFO(this->get_logger(), "%s: Capture device opened (SDL Id = %d):\n",
               __func__, _dev_id_in);
   RCLCPP_INFO(this->get_logger(), "  - Sample rate: %d\n",
-              capture_spec_obtained.freq);
+              _capture_spec_obtained.freq);
   RCLCPP_INFO(this->get_logger(), "  - Format: %d (Requested: %d)\n",
-              capture_spec_obtained.format, capture_spec_requested.format);
+              _capture_spec_obtained.format, _capture_spec_requested.format);
   RCLCPP_INFO(this->get_logger(), "  - Channels: %d (Requested: %d)\n",
-              capture_spec_obtained.channels, capture_spec_requested.channels);
+              _capture_spec_obtained.channels,
+              _capture_spec_requested.channels);
   RCLCPP_INFO(this->get_logger(), "  - Samples per frame: %d\n",
-              capture_spec_obtained.samples);
+              _capture_spec_obtained.samples);
 
-  _sample_rate = capture_spec_obtained.freq;
+  _sample_rate = _capture_spec_obtained.freq;
   SDL_PauseAudioDevice(_dev_id_in, 0);
   return true;
 }
