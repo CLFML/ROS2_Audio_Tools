@@ -33,7 +33,7 @@ jobs:
           $version = $release -replace "^v", ""
           $env:RELEASE_VERSION = $version
           cd C:\cw
-          (Get-Content "recipe/recipe.yaml") -replace 'VER{0.0.0}', $env:RELEASE_VERSION | Set-Content "recipe/recipe.yaml"
+          (Get-Content "recipe/recipe.yaml") -replace 'VER{0.0.0}', "`"$env:RELEASE_VERSION`"" | Set-Content "recipe/recipe.yaml"
 
       - name: Install Pixi
         uses: prefix-dev/setup-pixi@v0.8.3
