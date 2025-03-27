@@ -28,7 +28,7 @@ jobs:
           export RELEASE_VERSION="$(gh release view --json tagName --jq .tagName | sed 's/^v//')"
           
           cd ~/recipe
-          sed -i "s/VER{0.0.0}/$RELEASE_VERSION/g" recipe/recipe.yaml
+          sed -i "s/VER{0.0.0}/\"$RELEASE_VERSION\"/g" recipe/recipe.yaml
 
       - name: Install Pixi
         uses: prefix-dev/setup-pixi@v0.8.3
