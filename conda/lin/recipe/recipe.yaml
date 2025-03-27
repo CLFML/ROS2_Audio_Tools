@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
 package:
   name: ros2-audio-tools
-  version: "VER{0.0.0}"
+  version: VER{0.0.0}
 
 source:
   - path: '/home/runner/src'
@@ -21,7 +21,7 @@ extra:
 outputs:
   - package:
       name: ros-jazzy-audio-tools
-      version: "VER{0.0.0}"
+      version: VER{0.0.0}
     about:
       homepage: https://www.ros.org/
       license: BSD-3-Clause
