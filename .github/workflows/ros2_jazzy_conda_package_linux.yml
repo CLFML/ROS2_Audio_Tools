@@ -29,6 +29,8 @@ jobs:
           
           cd ~/recipe
           sed -i "s/VER{0.0.0}/\"$RELEASE_VERSION\"/g" recipe/recipe.yaml
+          echo "--- Final recipe.yaml ---"
+          cat recipe/recipe.yaml
 
       - name: Install Pixi
         uses: prefix-dev/setup-pixi@v0.8.3
