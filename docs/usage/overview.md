@@ -64,7 +64,7 @@ Capture microphone input and publish to `/audio_stamped`. Simple energy-based Vo
 
 ```bash
 # Terminal 1
-ros2 run audio_tools audio_vad.launch.py
+ros2 launch audio_tools audio_vad.launch.py
 
 # Terminal 2
 ros2 topic echo /voice_activity
