@@ -8,10 +8,10 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at:
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License is an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -117,6 +117,16 @@ private:
       {"U8", 1},    {"S8", 1},    {"U16LE", 2}, {"U16BE", 2},
       {"S16LE", 2}, {"S16BE", 2}, {"S32LE", 4}, {"S32BE", 4},
       {"F32LE", 4}, {"F32BE", 4}, {"F32", 4}};
+
+  /**
+   * @brief Parameter for the voice activity topic name.
+   */
+  std::string _voice_activity_topic;
+
+  /**
+   * @brief Parameter for the audio data topic name.
+   */
+  std::string _audio_data_topic;
 };
 
 #endif /* VAD_NODE_HPP */

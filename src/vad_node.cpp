@@ -26,27 +26,36 @@ VADNode::VADNode() : Node("vad_node"), _current_vad_state(false) {
   this->declare_parameter<float>("energy_threshold", 0.01);
   this->declare_parameter<float>("hold_time", 0.5);
   this->declare_parameter<int>("min_samples", 160);
+  this->declare_parameter<std::string>("voice_activity_topic",
+                                       "voice_activity");
+  this->declare_parameter<std::string>("audio_data_topic", "audio_stamped");
 
   this->get_parameter("energy_threshold", _energy_threshold);
   this->get_parameter("hold_time", _hold_time);
   this->get_parameter("min_samples", _min_samples);
+  this->get_parameter("voice_activity_topic", _voice_activity_topic);
+  this->get_parameter("audio_data_topic", _audio_data_topic);
 
   RCLCPP_INFO(this->get_logger(), "VAD initialized with parameters:");
   RCLCPP_INFO(this->get_logger(), "  - Energy threshold: %.4f",
               _energy_threshold);
   RCLCPP_INFO(this->get_logger(), "  - Hold time: %.2f seconds", _hold_time);
   RCLCPP_INFO(this->get_logger(), "  - Min samples: %d", _min_samples);
+  RCLCPP_INFO(this->get_logger(), "  - Voice activity topic: %s",
+              _voice_activity_topic.c_str());
+  RCLCPP_INFO(this->get_logger(), "  - Audio data topic: %s",
+              _audio_data_topic.c_str());
 
   // Initialize the last voice time to current time
   _last_voice_time = this->now();
 
   // Create publisher for voice activity detection
   _vad_pub = this->create_publisher<audio_tools::msg::VoiceActivity>(
-      "voice_activity", 10);
+      _voice_activity_topic, 10);
 
   // Subscribe to audio data stamped topic
   _audio_sub = this->create_subscription<audio_tools::msg::AudioDataStamped>(
-      "audio_stamped", 10,
+      _audio_data_topic, 10,
       std::bind(&VADNode::audioCallback, this, std::placeholders::_1));
 
   RCLCPP_INFO(this->get_logger(), "VAD node is ready");
@@ -172,15 +181,10 @@ bool VADNode::convertToFloatSamples(const std::vector<uint8_t> &audio_data,
       out_samples[i] = (audio_data[i] - 128) / 128.0f;
     }
   } else {
-    RCLCPP_WARN(this->get_logger(),
-                "Format conversion not implemented for %s, using raw values",
-                sample_format.c_str());
-
-    // Just copy raw bytes as a fallback
-    for (size_t i = 0; i < num_samples; i++) {
-      out_samples[i] =
-          static_cast<float>(audio_data[i * bytes_per_sample]) / 255.0f;
-    }
+    RCLCPP_ERROR(this->get_logger(), "Format conversion not implemented for %s",
+                 sample_format.c_str());
+    throw std::runtime_error("Format conversion not implemented for " +
+                             sample_format);
   }
 
   return true;
