@@ -1,0 +1,123 @@
+# Voice Activity Detection
+
+The Voice Activity Detection (VAD) node provides real-time detection of voice or speech in audio streams. The node uses a simple energy-based algorithm to determine if voice is present in the audio signal.
+
+## How it works
+
+The VAD node subscribes to audio data and performs the following steps:
+
+1. Converts the incoming audio to floating-point samples
+2. Calculates the energy level of the audio signal
+3. Compares this energy to a threshold
+4. Applies a hold time to prevent rapid on/off switching
+5. Publishes the detection state
+
+## Node Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `energy_threshold` | float | 0.01 | Energy threshold for detection |
+| `hold_time` | float | 0.5 | Time in seconds to maintain detection after voice stops |
+| `min_samples` | int | 160 | Minimum number of samples required for detection |
+
+## Topics
+
+### Subscribed Topics
+
+- `audio_stamped` ([audio_tools/AudioDataStamped](../msg/AudioDataStamped.md)): Audio data with timestamp and format information
+
+### Published Topics
+
+- `voice_activity` ([audio_tools/VoiceActivity](../msg/VoiceActivity.md)): Voice activity detection results
+
+## Message Format
+
+The `VoiceActivity` message includes:
+
+```
+std_msgs/Header header      # Timestamp and frame information
+bool active                 # True when voice activity is detected
+float32 energy_level        # Current audio energy level
+float32 threshold           # Current threshold being used
+float32 hold_time           # Hold time in seconds for the detection
+```
+
+## Usage Example
+
+To run the VAD node separately:
+
+```bash
+ros2 run audio_tools vad_node --ros-args -p energy_threshold:=0.015 -p hold_time:=0.3
+```
+
+To run with the audio capture node:
+
+```bash
+ros2 launch audio_tools audio_vad.launch.py
+```
+
+## Tuning the VAD
+
+The energy threshold is the most important parameter to tune:
+
+- **Too low**: Will trigger on background noise
+- **Too high**: May miss quiet speech
+
+### Step-by-Step Tuning Process
+
+1. **Monitor the energy level of your audio**:
+   ```bash
+   ros2 topic echo /voice_activity
+   ```
+
+2. **Determine your noise floor**:
+   Remain silent and observe the `energy_level` values. Note the maximum level during silence.
+
+3. **Determine speech energy level**:
+   Speak at a normal volume and note the typical `energy_level` values.
+
+4. **Set the threshold**:
+   Set the threshold slightly above your noise floor:
+   ```bash
+   ros2 param set /vad energy_threshold 0.015  # Adjust based on your observations
+   ```
+
+5. **Adjust hold time**:
+   If detection is fragmented during normal speech, increase the hold time:
+   ```bash
+   ros2 param set /vad hold_time 0.7  # Adjust as needed
+   ```
+
+### Visual Tuning
+
+For visual tuning, use RQT to plot the energy levels:
+
+```bash
+rqt_plot /voice_activity/energy_level /voice_activity/threshold /voice_activity/active
+```
+
+This will display:
+- Your audio energy over time
+- The threshold line
+- The detection state (0 or 1)
+
+### Environment-Specific Settings
+
+Here are suggested starting points for different environments:
+
+| Environment | Suggested energy_threshold | Suggested hold_time |
+|-------------|----------------------------|---------------------|
+| Quiet room, close mic | 0.005-0.01 | 0.3-0.5s |
+| Office, close mic | 0.01-0.02 | 0.5-0.7s |
+| Noisy environment | 0.02-0.05 | 0.7-1.0s |
+| Far-field mic | 0.01-0.03 | 0.7-1.0s |
+
+## Limitations
+
+This implementation uses a simple energy-based detector which works well in low-noise environments but may not perform optimally in:
+
+- Noisy environments
+- Situations with varying background noise
+- When capturing audio from distant microphones
+
+For more advanced detection in challenging environments, consider integrating a machine learning-based VAD algorithm.
