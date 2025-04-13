@@ -56,9 +56,9 @@ private:
    * @param sample_format The format of the audio samples.
    * @return True if voice activity is detected, false otherwise.
    */
-  bool detectVoiceActivity(const std::vector<uint8_t> &audio_data, 
+  bool detectVoiceActivity(const std::vector<uint8_t> &audio_data,
                            const std::string &sample_format);
-  
+
   /**
    * @brief Converts audio data to float samples for processing.
    * @param audio_data The raw audio data.
@@ -83,7 +83,7 @@ private:
    * @param energy_level The current audio energy level.
    * @param timestamp The timestamp for the message.
    */
-  void publishVoiceActivity(bool active, float energy_level, 
+  void publishVoiceActivity(bool active, float energy_level,
                             const rclcpp::Time &timestamp);
 
   /**
@@ -94,29 +94,29 @@ private:
   /**
    * @brief ROS subscriber for audio data.
    */
-  rclcpp::Subscription<audio_tools::msg::AudioDataStamped>::SharedPtr _audio_sub;
+  rclcpp::Subscription<audio_tools::msg::AudioDataStamped>::SharedPtr
+      _audio_sub;
 
   /**
    * @brief Parameters for VAD.
    */
-  float _energy_threshold;  // Threshold for energy-based detection
-  float _hold_time;         // Time in seconds to hold detection state
-  int _min_samples;         // Minimum number of samples for detection
+  float _energy_threshold; // Threshold for energy-based detection
+  float _hold_time;        // Time in seconds to hold detection state
+  int _min_samples;        // Minimum number of samples for detection
 
   /**
    * @brief State variables for VAD.
    */
-  bool _current_vad_state;  // Current voice activity state
-  rclcpp::Time _last_voice_time;  // Time when voice was last detected
-  
+  bool _current_vad_state;       // Current voice activity state
+  rclcpp::Time _last_voice_time; // Time when voice was last detected
+
   /**
    * @brief Conversion map for audio formats to byte sizes.
    */
   const std::unordered_map<std::string, int> _format_byte_size = {
-      {"U8", 1},   {"S8", 1},     {"U16LE", 2}, {"U16BE", 2},
+      {"U8", 1},    {"S8", 1},    {"U16LE", 2}, {"U16BE", 2},
       {"S16LE", 2}, {"S16BE", 2}, {"S32LE", 4}, {"S32BE", 4},
-      {"F32LE", 4}, {"F32BE", 4}, {"F32", 4}
-  };
+      {"F32LE", 4}, {"F32BE", 4}, {"F32", 4}};
 };
 
 #endif /* VAD_NODE_HPP */
