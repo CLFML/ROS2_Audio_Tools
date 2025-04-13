@@ -60,6 +60,7 @@ nav:
       - usage/usage_with_native_linux.md
   - Implementation:
     - about/implementation.md
+    - about/voice_activity_detection.md
   - Contributing:
     - contributing/rules.md
     - contributing/license.md
