@@ -34,10 +34,6 @@ if(UNIX AND NOT APPLE)  # Linux only
   target_compile_options(audio_capture_node PRIVATE -Wall)
 endif()
 
-install(TARGETS
-audio_capture_node
-DESTINATION lib/${PROJECT_NAME}) 
-
 # Audio Playback Node
 add_executable(audio_playback_node src/audio_playback_node.cpp)
 target_link_libraries(audio_playback_node "${cpp_typesupport_target}" ${SDL2_LIBRARIES}) 
@@ -69,7 +65,7 @@ ament_target_dependencies(vad_node
 install(TARGETS
   audio_capture_node
   audio_playback_node
-  vad_node  # Added VAD node
+  vad_node
   DESTINATION lib/${PROJECT_NAME}
 )
 
