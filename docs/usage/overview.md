@@ -57,3 +57,15 @@ ros2 run audio_tools audio_capture_node
 ros2 run audio_tools audio_playback_node \
   --ros-args -p audio_topic:=/audio_stamped
 ```
+
+### 🗣️ 5. Voice Activity Detection
+
+Capture microphone input and publish to `/audio_stamped`. Simple energy-based Voice Activity Detection (VAD) node on `/audio_stamped` and publishes detection results to `/voice_activity`. Note that VAD parameters are set in launch file.
+
+```bash
+# Terminal 1
+ros2 launch audio_tools audio_vad.launch.py
+
+# Terminal 2
+ros2 topic echo /voice_activity
+```

@@ -140,3 +140,58 @@ ros2 run audio_tools audio_playback_node \
 - `SDL2`
 - Custom messages in `audio_tools`
 
+
+## `vad_node`
+
+**Voice Activity Detection Node for ROS 2**
+
+Analyzes audio streams to detect the presence of speech or voice activity and publishes the detection state. Useful for conversation systems, wake word triggers, and audio recording automation.
+
+---
+### ✅ Topics
+| Topic | Type | Description |
+|------------------|------------------------------------------|-----------------------------------|
+| `/voice_activity` | `audio_tools/msg/VoiceActivity` | Voice activity detection state |
+| Subscribes to: | | |
+| `/audio_stamped` | `audio_tools/msg/AudioDataStamped` | Audio input for analysis |
+---
+
+### ⚙️ Parameters
+| Name | Type | Default | Description |
+|----------------|----------|---------|---------------------------------------------|
+| `energy_threshold`| `float` | `0.01` | Detection sensitivity threshold |
+| `hold_time` | `float` | `0.5` | Time in seconds to maintain detection after voice stops |
+| `min_samples` | `int` | `160` | Minimum samples needed for detection decision |
+---
+
+### 📦 Message Notes
+- `VoiceActivity`:
+  - `std_msgs/Header header` with `stamp` and `frame_id`
+  - `bool active` - Detection state (true/false)
+  - `float32 energy_level` - Current audio energy level
+  - `float32 threshold` - Detection threshold in use
+  - `float32 hold_time` - Time to hold detection state after voice stops
+---
+
+### 🧩 Implementation Notes
+- Uses an **energy-based algorithm** for voice detection.
+- Converts all audio formats to normalized float [-1.0, 1.0] for processing.
+- Energy calculation: `energy = sum(sample * sample) / num_samples`
+- Hold timer prevents rapid switching between states during pauses.
+- Format conversion supports U8, S8, S16LE, S16BE, F32, etc.
+---
+
+### 🏁 Launch Example
+```bash
+ros2 run audio_tools vad_node \
+ --ros-args \
+-p energy_threshold:=0.015 \
+-p hold_time:=0.7 \
+-p min_samples:=160
+```
+---
+
+### 🧪 Dependencies
+- `rclcpp`
+- `audio_tools/msg/AudioDataStamped`
+- `audio_tools/msg/VoiceActivity`
