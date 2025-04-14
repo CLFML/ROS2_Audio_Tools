@@ -1,0 +1,1619 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../usage/usage_with_native_linux/">
+      
+      
+        <link rel="next" href="../../contributing/rules/">
+      
+      
+      <link rel="icon" href="../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.11">
+    
+    
+      
+        <title>Audio Tools Node implementations - ROS2_Audio_Tools</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.4af4bdda.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Avenir+Next+Condensed:300,300i,400,400i,700,700i%7CAvenir+Next+Condensed:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Avenir Next Condensed";--md-code-font:"Avenir Next Condensed"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/logo.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="green" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#audio-tools-node-implementations" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ROS2_Audio_Tools" class="md-header__button md-logo" aria-label="ROS2_Audio_Tools" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ROS2_Audio_Tools
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Audio Tools Node implementations
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../usage/overview/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Implementation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../contributing/rules/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Contributing
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ROS2_Audio_Tools" class="md-nav__button md-logo" aria-label="ROS2_Audio_Tools" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    ROS2_Audio_Tools
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../usage/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Getting started
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Build Environment
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Build Environment
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../usage/ros2_pixi_build_linux_windows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Getting started with Pixi
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../usage/usage_with_native_linux/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    🐧 Getting Started with Native ROS
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Implementation
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Implementation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Audio Tools Node implementations
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Audio Tools Node implementations
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#audio_capture_node" class="md-nav__link">
+    <span class="md-ellipsis">
+      audio_capture_node
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="audio_capture_node">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#topics" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✅ Topics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚙️ Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#message-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      📦 Message Notes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧩 Implementation Notes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#launch-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏁 Launch Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧪 Dependencies
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audio_playback_node" class="md-nav__link">
+    <span class="md-ellipsis">
+      audio_playback_node
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="audio_playback_node">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#topics_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✅ Topics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚙️ Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#expected-message-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      📦 Expected Message Format
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-notes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧩 Implementation Notes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#launch-example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏁 Launch Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dependencies_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧪 Dependencies
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vad_node" class="md-nav__link">
+    <span class="md-ellipsis">
+      vad_node
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="vad_node">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#topics_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✅ Topics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚙️ Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#message-notes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      📦 Message Notes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-notes_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧩 Implementation Notes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#launch-example_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏁 Launch Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ros2-run-audio_tools-vad_node-ros-args-p-energy_threshold0015-p-hold_time07-p-min_samples160" class="md-nav__link">
+    <span class="md-ellipsis">
+      ros2 run audio_tools vad_node \ --ros-args \ -p energy_threshold:=0.015 \ -p hold_time:=0.7 \ -p min_samples:=160
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ros2 run audio_tools vad_node \ --ros-args \ -p energy_threshold:=0.015 \ -p hold_time:=0.7 \ -p min_samples:=160">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dependencies_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧪 Dependencies
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Contributing
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contribution rules
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/license/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    License
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#audio_capture_node" class="md-nav__link">
+    <span class="md-ellipsis">
+      audio_capture_node
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="audio_capture_node">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#topics" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✅ Topics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚙️ Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#message-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      📦 Message Notes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧩 Implementation Notes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#launch-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏁 Launch Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧪 Dependencies
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audio_playback_node" class="md-nav__link">
+    <span class="md-ellipsis">
+      audio_playback_node
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="audio_playback_node">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#topics_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✅ Topics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚙️ Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#expected-message-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      📦 Expected Message Format
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-notes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧩 Implementation Notes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#launch-example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏁 Launch Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dependencies_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧪 Dependencies
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vad_node" class="md-nav__link">
+    <span class="md-ellipsis">
+      vad_node
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="vad_node">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#topics_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      ✅ Topics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚙️ Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#message-notes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      📦 Message Notes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-notes_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧩 Implementation Notes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#launch-example_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏁 Launch Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ros2-run-audio_tools-vad_node-ros-args-p-energy_threshold0015-p-hold_time07-p-min_samples160" class="md-nav__link">
+    <span class="md-ellipsis">
+      ros2 run audio_tools vad_node \ --ros-args \ -p energy_threshold:=0.015 \ -p hold_time:=0.7 \ -p min_samples:=160
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ros2 run audio_tools vad_node \ --ros-args \ -p energy_threshold:=0.015 \ -p hold_time:=0.7 \ -p min_samples:=160">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dependencies_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧪 Dependencies
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="audio-tools-node-implementations">Audio Tools Node implementations</h1>
+<p>Here some brief details as how the functionality is implemented.</p>
+<h2 id="audio_capture_node"><code>audio_capture_node</code></h2>
+<p><strong>Audio Capture Node using SDL2 for ROS 2</strong></p>
+<p>Captures raw audio from an input device and publishes it via ROS topics. Useful for audio processing pipelines, speech recognition, or diagnostics.</p>
+<hr />
+<h3 id="topics">✅ Topics</h3>
+<table>
+<thead>
+<tr>
+<th>Topic</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/audio</code></td>
+<td><code>audio_tools/msg/AudioData</code></td>
+<td>Raw audio byte stream</td>
+</tr>
+<tr>
+<td><code>/audio_stamped</code></td>
+<td><code>audio_tools/msg/AudioDataStamped</code></td>
+<td>Audio with timestamp + info</td>
+</tr>
+<tr>
+<td><code>/audio_info</code></td>
+<td><code>audio_tools/msg/AudioInfo</code></td>
+<td>Metadata (sample rate, format, etc.)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="parameters">⚙️ Parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sample_format</code></td>
+<td><code>string</code></td>
+<td><code>S16LE</code></td>
+<td>Audio format (<code>S16LE</code>, <code>F32LE</code>, etc.)</td>
+</tr>
+<tr>
+<td><code>channels</code></td>
+<td><code>int</code></td>
+<td><code>1</code></td>
+<td>Number of channels (1–8)</td>
+</tr>
+<tr>
+<td><code>sample_rate</code></td>
+<td><code>int</code></td>
+<td><code>16000</code></td>
+<td>Sampling rate in Hz</td>
+</tr>
+<tr>
+<td><code>device</code></td>
+<td><code>int</code></td>
+<td><code>-1</code></td>
+<td>Device index (-1 = default input device)</td>
+</tr>
+<tr>
+<td><code>chunk_size</code></td>
+<td><code>int</code></td>
+<td><code>1024</code></td>
+<td>Buffer size per capture call (512–4096)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="message-notes">📦 Message Notes</h3>
+<ul>
+<li><code>AudioData</code>: raw <code>uint8[] data</code></li>
+<li><code>AudioDataStamped</code>:</li>
+<li><code>std_msgs/Header header</code> with <code>stamp</code> and <code>frame_id</code></li>
+<li><code>AudioData audio</code></li>
+<li><code>AudioInfo info</code></li>
+<li><code>AudioInfo</code> includes:</li>
+<li><code>sample_rate</code></li>
+<li><code>sample_format</code></li>
+<li><code>channels</code></li>
+</ul>
+<hr />
+<h3 id="implementation-notes">🧩 Implementation Notes</h3>
+<ul>
+<li>Uses <strong>SDL2</strong> for low-latency cross-platform audio capture.</li>
+<li>Device info is printed on startup.</li>
+<li>Buffer timestamping is calculated based on sample rate and byte depth.</li>
+<li>Publishes metadata (<code>/audio_info</code>) every 5 seconds.</li>
+<li>All audio capture runs on a callback triggered by SDL2.</li>
+</ul>
+<hr />
+<h3 id="launch-example">🏁 Launch Example</h3>
+<div class="highlight"><pre><span></span><code>ros2<span class="w"> </span>run<span class="w"> </span>audio_tools<span class="w"> </span>audio_capture_node<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--ros-args<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-p<span class="w"> </span>sample_rate:<span class="o">=</span><span class="m">16000</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-p<span class="w"> </span>channels:<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-p<span class="w"> </span>device:<span class="o">=</span>-1
+</code></pre></div>
+<hr />
+<h3 id="dependencies">🧪 Dependencies</h3>
+<ul>
+<li><code>rclcpp</code></li>
+<li><code>SDL2</code></li>
+<li>Custom messages in <code>audio_tools</code></li>
+</ul>
+<h2 id="audio_playback_node"><code>audio_playback_node</code></h2>
+<p><strong>Audio Playback Node using SDL2 for ROS 2</strong></p>
+<p>Subscribes to audio messages and plays them in real-time through an output device using SDL2.</p>
+<hr />
+<h3 id="topics_1">✅ Topics</h3>
+<table>
+<thead>
+<tr>
+<th>Topic</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/audio_playback</code> (default)</td>
+<td><code>audio_tools/msg/AudioDataStamped</code></td>
+<td>Audio stream with metadata</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="parameters_1">⚙️ Parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>audio_topic</code></td>
+<td><code>string</code></td>
+<td><code>/audio_playback</code></td>
+<td>Topic to subscribe to for audio data</td>
+</tr>
+<tr>
+<td><code>device_index</code></td>
+<td><code>int</code></td>
+<td><code>-1</code></td>
+<td>Index of output device (-1 = default device)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="expected-message-format">📦 Expected Message Format</h3>
+<ul>
+<li><code>AudioDataStamped</code>:</li>
+<li><code>AudioData audio</code>: raw audio byte stream</li>
+<li><code>AudioInfo info</code>: playback metadata:<ul>
+<li><code>sample_rate</code></li>
+<li><code>sample_format</code></li>
+<li><code>channels</code></li>
+</ul>
+</li>
+</ul>
+<hr />
+<h3 id="implementation-notes_1">🧩 Implementation Notes</h3>
+<ul>
+<li>Uses <strong>SDL2</strong> to output audio through a selected or default device.</li>
+<li>Supports multiple formats: <code>S16LE</code>, <code>S16BE</code>, <code>U8</code>, <code>S8</code>, <code>F32LE</code>, <code>F32BE</code></li>
+<li>Device info printed on startup.</li>
+<li>Initializes playback only on receiving the first message (lazy init).</li>
+<li>Queues audio chunks using <code>SDL_QueueAudio()</code>.</li>
+</ul>
+<hr />
+<h3 id="launch-example_1">🏁 Launch Example</h3>
+<div class="highlight"><pre><span></span><code>ros2<span class="w"> </span>run<span class="w"> </span>audio_tools<span class="w"> </span>audio_playback_node<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--ros-args<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-p<span class="w"> </span>audio_topic:<span class="o">=</span>/audio_stamped<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-p<span class="w"> </span>device_index:<span class="o">=</span>-1
+</code></pre></div>
+<hr />
+<h3 id="dependencies_1">🧪 Dependencies</h3>
+<ul>
+<li><code>rclcpp</code></li>
+<li><code>SDL2</code></li>
+<li>Custom messages in <code>audio_tools</code></li>
+</ul>
+<h2 id="vad_node"><code>vad_node</code></h2>
+<p><strong>Voice Activity Detection Node for ROS 2</strong></p>
+<p>Analyzes audio streams to detect the presence of speech or voice activity and publishes the detection state. Useful for conversation systems, wake word triggers, and audio recording automation.</p>
+<hr />
+<h3 id="topics_2">✅ Topics</h3>
+<table>
+<thead>
+<tr>
+<th>Topic</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/voice_activity</code></td>
+<td><code>audio_tools/msg/VoiceActivity</code></td>
+<td>Voice activity detection state</td>
+</tr>
+<tr>
+<td>Subscribes to:</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>/audio_stamped</code></td>
+<td><code>audio_tools/msg/AudioDataStamped</code></td>
+<td>Audio input for analysis</td>
+</tr>
+<tr>
+<td>---</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="parameters_2">⚙️ Parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>energy_threshold</code></td>
+<td><code>float</code></td>
+<td><code>0.01</code></td>
+<td>Detection sensitivity threshold</td>
+</tr>
+<tr>
+<td><code>hold_time</code></td>
+<td><code>float</code></td>
+<td><code>0.5</code></td>
+<td>Time in seconds to maintain detection after voice stops</td>
+</tr>
+<tr>
+<td><code>min_samples</code></td>
+<td><code>int</code></td>
+<td><code>160</code></td>
+<td>Minimum samples needed for detection decision</td>
+</tr>
+<tr>
+<td>---</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="message-notes_1">📦 Message Notes</h3>
+<ul>
+<li><code>VoiceActivity</code>:</li>
+<li><code>std_msgs/Header header</code> with <code>stamp</code> and <code>frame_id</code></li>
+<li><code>bool active</code> - Detection state (true/false)</li>
+<li><code>float32 energy_level</code> - Current audio energy level</li>
+<li><code>float32 threshold</code> - Detection threshold in use</li>
+<li><code>float32 hold_time</code> - Time to hold detection state after voice stops</li>
+</ul>
+<hr />
+<h3 id="implementation-notes_2">🧩 Implementation Notes</h3>
+<ul>
+<li>Uses an <strong>energy-based algorithm</strong> for voice detection.</li>
+<li>Converts all audio formats to normalized float [-1.0, 1.0] for processing.</li>
+<li>Energy calculation: <code>energy = sum(sample * sample) / num_samples</code></li>
+<li>Hold timer prevents rapid switching between states during pauses.</li>
+<li>Format conversion supports U8, S8, S16LE, S16BE, F32, etc.</li>
+</ul>
+<hr />
+<h3 id="launch-example_2">🏁 Launch Example</h3>
+<h2 id="ros2-run-audio_tools-vad_node-ros-args-p-energy_threshold0015-p-hold_time07-p-min_samples160"><div class="highlight"><pre><span></span><code>ros2<span class="w"> </span>run<span class="w"> </span>audio_tools<span class="w"> </span>vad_node<span class="w"> </span><span class="se">\</span>
+<span class="w"> </span>--ros-args<span class="w"> </span><span class="se">\</span>
+-p<span class="w"> </span>energy_threshold:<span class="o">=</span><span class="m">0</span>.015<span class="w"> </span><span class="se">\</span>
+-p<span class="w"> </span>hold_time:<span class="o">=</span><span class="m">0</span>.7<span class="w"> </span><span class="se">\</span>
+-p<span class="w"> </span>min_samples:<span class="o">=</span><span class="m">160</span>
+</code></pre></div></h2>
+<h3 id="dependencies_2">🧪 Dependencies</h3>
+<ul>
+<li><code>rclcpp</code></li>
+<li><code>audio_tools/msg/AudioDataStamped</code></li>
+<li><code>audio_tools/msg/VoiceActivity</code></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../../usage/usage_with_native_linux/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 🐧 Getting Started with Native ROS">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                🐧 Getting Started with Native ROS
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../contributing/rules/" class="md-footer__link md-footer__link--next" aria-label="Next: Contribution rules">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Contribution rules
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["announce.dismiss", "content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+    
+  </body>
+</html>
