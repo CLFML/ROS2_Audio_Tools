@@ -8,6 +8,11 @@ preview = ["pixi-build"]
 [tasks]
 build = "colcon build --packages-select audio_tools --cmake-args -DCMAKE_BUILD_TYPE=Release"
 
+# Run the audio capture node and publish via tailscale
+run_audio_capture_tailscale = { cmd = [
+    "./setup_ros_tailscale.sh", "ros2", "run", "audio_tools", "audio_capture_node", "--ros-args", "-p", "sample_rate:=16000", "-p", "channels:=1", "-p", "sample_format:=S16LE"
+], depends-on = ["build"] }
+
 [target.win-64.tasks]
 vscode = "code ."
 
@@ -37,3 +42,4 @@ numpy = "*"
 [target.win-64.dependencies]
 python-devtools = "*"
 python = "*"
+
